@@ -21,9 +21,15 @@ const addNewEntry = async(request, response) => {
     }
 }
 
-const getParticularTimezone = (request, response) => {
-    
+const getLatestEntry = async(request, response) => {
+    try{
+        const timezoneData = await timezoneModel.findOne().sort({createdAt: -1})
+        response.status(200).send(timezoneData)
+    }
+    catch(error){
+        response.status(500).send({message: error.message})
+    }
 }
 
-module.exports = {addNewEntry, getAllEntry}
+module.exports = {addNewEntry, getAllEntry, getLatestEntry}
 
