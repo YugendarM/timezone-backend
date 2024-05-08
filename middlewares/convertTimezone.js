@@ -7,6 +7,7 @@ const convertUtcTimezone = (startDate, endDate, timezone) => {
     utcConvertedStart = moment.tz(startDate,"YYYY-MM-DDTHH:mm:ss", timezone ).utc().format("DD-MM-YYYY HH:mm")
     utcConvertedEnd = moment.tz(endDate, "YYYY-MM-DDTHH:mm:ss", timezone).utc().format("DD-MM-YYYY HH:mm")
     console.log(utcConvertedStart, utcConvertedEnd);
+    return { utcConvertedStart, utcConvertedEnd}
 }
 
 const convertTimeZone = (start, end, timezone) => {
@@ -21,9 +22,9 @@ const convertTimezoneMiddleware = async(request, response) => {
         convertUtcTimezone(userData.startDate, userData.endDate, userData.timezone)
         const finalConvertedIST = convertTimeZone(utcConvertedStart, utcConvertedEnd, "Asia/Kolkata")
         const finalConvertedJST = convertTimeZone(utcConvertedStart, utcConvertedEnd, "Asia/Tokyo")
-        const finalConvertedCMT = convertTimeZone(utcConvertedStart, utcConvertedEnd, "Asia/Kolkata")
+        const finalConvertedGMT = convertUtcTimezone(userData.startDate, userData.endDate, userData.timezone)
         const finalConvertedPacific = convertTimeZone(utcConvertedStart, utcConvertedEnd, "America/Los_Angeles")
-        response.status(200).send({IST: finalConvertedIST, JST: finalConvertedJST, CMT: finalConvertedCMT, Pacific: finalConvertedPacific})
+        response.status(200).send({IST: finalConvertedIST, JST: finalConvertedJST, GMT: finalConvertedGMT, Pacific: finalConvertedPacific})
     }
     catch(error){
         response.status(500).send({message: error.message})
